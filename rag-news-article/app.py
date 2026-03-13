@@ -26,11 +26,13 @@ st.set_page_config(
 st.markdown("""
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500&display=swap');
+
   html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
     background-color: #0d0d0d;
     color: #f0f0f0;
   }
+
   .main-title {
     font-family: 'Syne', sans-serif;
     font-size: 3rem;
@@ -40,7 +42,14 @@ st.markdown("""
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.2rem;
   }
-  .sub-title { font-size: 1rem; color: #888; margin-bottom: 2rem; }
+
+  .sub-title {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 2rem;
+  }
+
+  /* ── Answer box — white text ── */
   .answer-box {
     background: #1a1a1a;
     border-left: 4px solid #f97316;
@@ -49,7 +58,9 @@ st.markdown("""
     margin-top: 1rem;
     font-size: 1rem;
     line-height: 1.7;
+    color: #ffffff !important;
   }
+
   .source-box {
     background: #111;
     border: 1px solid #333;
@@ -59,6 +70,7 @@ st.markdown("""
     font-size: 0.85rem;
     color: #f97316;
   }
+
   .step-badge {
     background: #f97316;
     color: #000;
@@ -69,12 +81,49 @@ st.markdown("""
     font-size: 0.75rem;
     margin-right: 8px;
   }
-  .stTextInput > div > div > input {
-    background: #1a1a1a !important;
+
+  /* ── Sidebar ── */
+  section[data-testid="stSidebar"] {
+    background-color: #111 !important;
+    border-right: 1px solid #222;
+  }
+
+  /* ── Sidebar input — white text on dark bg ── */
+  section[data-testid="stSidebar"] input {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border: 1px solid #555 !important;
+    border-radius: 8px !important;
+    caret-color: #f97316 !important;
+  }
+
+  section[data-testid="stSidebar"] input::placeholder {
+    color: #555 !important;
+  }
+
+  section[data-testid="stSidebar"] label {
     color: #f0f0f0 !important;
-    border: 1px solid #333 !important;
+  }
+
+  section[data-testid="stSidebar"] p,
+  section[data-testid="stSidebar"] span,
+  section[data-testid="stSidebar"] li {
+    color: #cccccc !important;
+  }
+
+  /* ── Main input ── */
+  .stTextInput > div > div > input {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
     border-radius: 8px !important;
   }
+
+  .stTextInput > div > div > input::placeholder {
+    color: #555 !important;
+  }
+
+  /* ── Button ── */
   .stButton > button {
     background: linear-gradient(90deg, #f97316, #facc15) !important;
     color: #000 !important;
@@ -85,10 +134,7 @@ st.markdown("""
     padding: 0.5rem 2rem !important;
     width: 100%;
   }
-  section[data-testid="stSidebar"] {
-    background-color: #111 !important;
-    border-right: 1px solid #222;
-  }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -128,15 +174,14 @@ if process_btn:
         with st.spinner("🔄 Loading and processing articles..."):
             progress = st.progress(0, text="📥 Loading articles...")
             try:
-                # ✅ WebBaseLoader - reliable for all websites
                 loader = WebBaseLoader(urls)
                 loader.requests_kwargs = {"verify": False}
                 data = loader.load()
-                
+
                 if not data:
                     st.error("❌ Could not load articles. Please check URLs.")
                     st.stop()
-                    
+
                 progress.progress(30, text=f"✅ Loaded {len(data)} article(s)!")
             except Exception as e:
                 st.error(f"❌ Error loading URLs: {e}")
@@ -149,7 +194,7 @@ if process_btn:
                 chunk_overlap=200,
             )
             docs = splitter.split_documents(data)
-            
+
             if not docs:
                 st.error("❌ No content found in articles. Try different URLs.")
                 st.stop()
@@ -227,7 +272,6 @@ Answer:""")
 
             try:
                 answer = chain.invoke(question)
-
                 st.markdown("#### 💡 Answer")
                 st.markdown(f'<div class="answer-box">{answer}</div>', unsafe_allow_html=True)
 
