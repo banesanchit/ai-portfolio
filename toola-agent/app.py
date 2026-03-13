@@ -96,6 +96,17 @@ st.markdown("""
     background-color: #0d0d1a !important;
     border-right: 1px solid #1a1a3a;
   }
+
+  section[data-testid="stSidebar"] p,
+  section[data-testid="stSidebar"] span,
+  section[data-testid="stSidebar"] li,
+  section[data-testid="stSidebar"] label {
+    color: #e0e0ff !important;
+  }
+
+  section[data-testid="stSidebar"] h3 {
+    color: #a855f7 !important;
+  }
 </style>
 """, unsafe_allow_html=True)
 
